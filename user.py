@@ -1,4 +1,6 @@
-import hashlib, time
+import hashlib
+import time
+
 
 class User:
     def __init__(self, first_name, last_name, users):
@@ -8,7 +10,7 @@ class User:
         while unvalidated:
             self.generate_id()
             unvalidated = self.validate_id(users)
-    
+
     def generate_id(self):
         concat_name = self.first_name + self.last_name + str(time.time())
         m = hashlib.sha256()
@@ -21,7 +23,7 @@ class User:
         print('First Name: ' + self.first_name)
         print('Last Name: ' + self.last_name)
         print('-'*30)
-    
+
     def get_id(self):
         return self.id
 
@@ -30,5 +32,5 @@ class User:
             if user.get_id == self.id:
                 self.generate_id
                 return True
-        
+
         return False

@@ -1,6 +1,7 @@
 from user import User
 
 users = []
+trans_pool = []
 
 
 def user_menu():
