@@ -17,15 +17,15 @@ class User:
         m.update(concat_name.encode('utf-8'))
         self.id = 'u_' + m.hexdigest()[0:10]
 
-    def print_user_info(self):
-        print('-'*30)
-        print('User Id: ' + self.id)
-        print('First Name: ' + self.first_name)
-        print('Last Name: ' + self.last_name)
-        print('-'*30)
+    def print_user_info_short(self):
+        output = str('       | ' + self.first_name + ' ' + self.last_name + '\t|' + '\n' +'-'*33)
+        return output
 
     def get_id(self):
         return self.id
+
+    def get_name(self):
+        return str(self.first_name + ' ' + self.last_name)
 
     def validate_id(self, users):
         for user in users:
@@ -34,3 +34,4 @@ class User:
                 return True
 
         return False
+
