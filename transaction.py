@@ -1,5 +1,7 @@
 from user import User
-import time, hashlib
+import time
+import hashlib
+
 
 class Transaction:
     def __init__(self, sender, recipient, amount):
@@ -15,8 +17,5 @@ class Transaction:
         m.update(concat_name.encode('utf-8'))
         self.id = 'tx_' + m.hexdigest()[0:10]
 
-    def get_transaction_info(self):
-        # ('|   Hash   |Sender            | Recipient       |Amount   |')
-        output = ('| ' + str(self.id) + '\t| ' + User.get_name(self.sender) + ' \t| ' + User.get_name(self.recipient) + '\t| ' + str(self.amount) + '\t |')
-        output = output + '\n' + '-'*58
-        return str(output)
+    def get_time(self):
+        return time.asctime(time.localtime(self.time))

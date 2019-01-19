@@ -1,17 +1,15 @@
 from user import User
 from transaction import Transaction
+from tabulate import tabulate
+from test_data import Test_Data
+from block import Block
 
 users = []
-trans_pool = []
+tx_pool = []
+test_data = Test_Data()
+blockchain = []
 
-def load_test_data():
-    new_user = User('Tom', 'Hanover', users)
-    users.append(new_user)
-    new_user = User('Liz', 'Hanover', users)
-    users.append(new_user)
-    new_trans = Transaction(users[0], users[1], 500.00)
-    trans_pool.append(new_trans)
-    print('Test Data Loaded\n\n')
+users, tx_pool = test_data.load_test_data(users, tx_pool)
 
 
 def user_menu():
@@ -24,8 +22,11 @@ def user_menu():
         print('|    1    |  Add a new user  |')
         print('|    2    |  See all users   |')
         print('|    3    |  Create a Tx     |')
-        if len(trans_pool) > 0:
+        if len(tx_pool) > 0:
             print('|    4    |  Show Tx Pool    |')
+        print('|    5    |  Mine a Block    |')
+        if len(blockchain) > 0:
+            print('|    6    |  Print Blocks    |')
         print('|    e    | Exit the program |')
         print('-'*30)
         return str(input('Select your Option: '))
@@ -41,7 +42,11 @@ def user_menu():
         elif response == '3':
             create_transaction()
         elif response == '4':
-            print_trans_pool()
+            print_tx_pool()
+        elif response == '5':
+            create_block()
+        elif response == '6':
+            print_blocks()
         elif response == 'e':
             print('goodbye!')
             break
@@ -74,25 +79,54 @@ def create_transaction():
     recipient = users[recipient_num - 1]
     amount = float(input('How much is the transaction for? '))
     transaction = Transaction(sender, recipient, amount)
-    trans_pool.append(transaction)
-    print(trans_pool)
+    tx_pool.append(transaction)
+    print(tx_pool)
 
 
 def print_users():
-    print('\n' + '-'*30)
-    print('|  User #  |  Name\t\t|')
-    print('-'*30)
+    table_data = []
+    headers = ['User #', 'Name']
     for index, user in enumerate(users, start=1):
-        print('|  ' + str(index) + str(user.print_user_info_short()))
-    
+        table_data.append([index,
+                           user.print_user_info_short()])
 
-def print_trans_pool():
-    print('\n' + '-'*58)
-    print('| ID            | Sender        | Recipient     | Amount |')
-    print('-'*58)
-    for transaction in trans_pool:
-        print(str(Transaction.get_transaction_info(transaction)))
+    print(tabulate(table_data, headers, tablefmt="grid"))
 
-load_test_data()
+
+def print_tx_pool():
+    table_data = []
+    headers = ['ID', 'Sender', 'Recipient', 'Amount', 'Time']
+    for tx in tx_pool:
+        table_data.append([tx.id,
+                           tx.sender.get_name(),
+                           tx.recipient.get_name(),
+                           tx.amount,
+                           tx.get_time()])
+    print(tabulate(table_data, headers, tablefmt="grid"))
+
+
+def create_block():
+    block = Block(blockchain, tx_pool)
+    blockchain.append(block)
+    print('New Block Added!')
+    for _ in range(len(tx_pool)):
+        tx_pool.pop()
+
+
+def print_blocks():
+    for block in blockchain:
+        print('-'*30)
+        print('Block height: ' + str(block.height))
+        print('Block hash: ' + block.hash)
+        print('Transactions: ')
+        table_data = []
+        headers = ['ID', 'Sender', 'Recipient', 'Amount', 'Time']
+        for tx in block.tx_pool:
+            table_data.append([tx.id,
+                            tx.sender.get_name(),
+                            tx.recipient.get_name(),
+                            tx.amount,
+                            tx.get_time()])
+            print(tabulate(table_data, headers, tablefmt="grid"))
+
 user_menu()
-

@@ -18,7 +18,7 @@ class User:
         self.id = 'u_' + m.hexdigest()[0:10]
 
     def print_user_info_short(self):
-        output = str('       | ' + self.first_name + ' ' + self.last_name + '\t|' + '\n' +'-'*33)
+        output = str(self.first_name + ' ' + self.last_name)
         return output
 
     def get_id(self):
